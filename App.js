@@ -3,6 +3,7 @@ import { Alert, FlatList, Keyboard, SafeAreaView, StyleSheet, Text, TouchableWit
 import AddPerson from './components/AddPerson';
 import Header from './components/Header';
 import Person from './components/Person';
+import Playground from './components/Playground';
 
 const App = () => {
   const [error, setError] = useState(false)
@@ -53,6 +54,7 @@ const App = () => {
         </View>
     </SafeAreaView>
     </TouchableWithoutFeedback>
+    // <Playground />
   )
 }
 

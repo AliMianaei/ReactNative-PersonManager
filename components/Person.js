@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         paddingVertical: 16,
         textAlign: 'center',
-        borderRadius: 4
+        borderRadius: 4, 
+        // marginTop: 50
     }
 })
