@@ -1,22 +1,51 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Alert, FlatList, Keyboard, SafeAreaView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import * as SplashScreen from 'expo-splash-screen';
+import * as Font from 'expo-font'
+
 import AddPerson from './components/AddPerson';
 import Header from './components/Header';
 import Person from './components/Person';
 import Playground from './components/Playground';
 
+const getFonts = () => {
+  return Font.loadAsync({
+    lato: require('./assets/fonts/lato.ttf')
+  })
+}
+
 const App = () => {
+
+  const [fontLoading, setFontLoading] = useState(false)
   const [error, setError] = useState(false)
   const [person, setPerson] = useState('')
   const [persons, setPersons] = useState([
-    {id: "1", name: "Ali Asghar"},
-    {id: "2", name: "Maryam"},
-    {id: "3", name: "Ali"},
-    {id: "4", name: "Najmeh"},
-    {id: "5", name: "Sina"},
+    {id: "1", name: "Ali Asghar", completed: false},
+    {id: "2", name: "Maryam", completed: false},
+    {id: "3", name: "Ali", completed: false},
+    {id: "4", name: "Najmeh", completed: false},
+    {id: "5", name: "Sina", completed: false},
   ]);
 
-  const pressHandler = id => setPersons((prevPersons) => prevPersons.filter(person => person.id !== id));
+  const deleteHandler = id => {
+    setPersons((prevPersons) => prevPersons.filter(person => person.id !== id));
+  }
+
+  const completedHandler = id => {
+    const allPersons = [...persons];
+    const personIndex = allPersons.findIndex(person => person.id == id);
+
+    // const person = allPersons[personIndex];
+    // // person.completed = true;
+    // person.completed = !person.completed;
+    // allPersons[personIndex] = person;
+
+    // allPersons[personIndex].completed = true;
+    allPersons[personIndex].completed = !allPersons[personIndex].completed;
+
+    setPersons(allPersons);
+  }
+
   const submitHandler = () => {
     if(person.length > 2) {
       setPersons((prevPersons) => [...prevPersons, {id: Math.round(Math.random()*1000).toString(), name: person }])
@@ -31,8 +60,46 @@ const App = () => {
     }
   };
 
+  useEffect(() => {
+    async function prepare() {
+      try {
+        // Keep the splash screen visible while we fetch resources
+        await SplashScreen.preventAutoHideAsync();
+        // Pre-load fonts, make any API calls you need to do here
+        await Font.loadAsync({
+          lato: require('./assets/fonts/lato.ttf')
+        });
+        // Artificially delay for two seconds to simulate a slow loading
+        // experience. Please remove this if you copy and paste the code!
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setFontLoading(true);
+      }
+    }
+
+    prepare();
+    console.log({fontLoading})
+  }, []);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontLoading) {
+      // This tells the splash screen to hide immediately! If we call this after
+      // `setAppIsReady`, then we may see a blank screen while the app is
+      // loading its initial state and rendering its first pixels. So instead,
+      // we hide the splash screen once we know the root view has already
+      // performed layout.
+      await SplashScreen.hideAsync();
+    }
+  }, [fontLoading]);
+
+  if (!fontLoading) {
+    return null;
+  }
+
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} onLayout={onLayoutRootView} >
       <SafeAreaView style={styles.androidSafeArea}>
         <View style={styles.container}>
           <Header/>
@@ -43,7 +110,7 @@ const App = () => {
               <FlatList 
                 contentContainerStyle={{gap: 16}}
                 data={persons} 
-                renderItem={({item}) => <Person person={item} pressHandler={pressHandler} />}
+                renderItem={({item}) => <Person person={item} deleteHandler={deleteHandler} completedHandler={completedHandler} />}
                 keyExtractor={item => item.id}
               />
             </View>

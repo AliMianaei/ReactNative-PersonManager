@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { Text, View } from 'react-native'
+import { styles } from './styles/globalStyle'
 
 const Header = () => {
     return (
@@ -10,17 +11,3 @@ const Header = () => {
 }
 
 export default Header
-
-const styles = StyleSheet.create({
-    headerContainer: {
-        paddingHorizontal: 8,
-        paddingVertical: 16,
-        backgroundColor: '#EEE',
-    },
-    headerText: {
-        textAlign: 'center',
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#995588'
-    }
-})

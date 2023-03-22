@@ -1,24 +1,19 @@
-import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
+import { Text, TouchableOpacity, View } from 'react-native'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { styles } from './styles/globalStyle'
 
-const Person = ({person, pressHandler}) => {
+// import { styles } from './styles/globalStyle'
+
+const Person = ({person, deleteHandler, completedHandler}) => {
   return (
-    <TouchableOpacity onPress={() => pressHandler(person.id)}>
-        <Text style={styles.person}>{person.name}</Text>
+    <TouchableOpacity onPress={() => completedHandler(person.id)}>
+        <View style={[styles.container, person.completed && styles.completed]}>
+          <Text style={styles.person}>{person.name}</Text>
+          <MaterialCommunityIcons name="delete" size={24} color="#CC0044" onPress={() => deleteHandler(person.id)} />
+        </View>
     </TouchableOpacity>
   )
 }
 
 export default Person
-
-const styles = StyleSheet.create({
-    person: {
-        backgroundColor: '#3388FF55',
-        fontSize: 16,
-        fontWeight: 'bold',
-        paddingVertical: 16,
-        textAlign: 'center',
-        borderRadius: 4, 
-        // marginTop: 50
-    }
-})

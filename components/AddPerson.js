@@ -1,5 +1,6 @@
-import { Button, StyleSheet, TextInput, View } from 'react-native'
 import React from 'react'
+import { Button, TextInput, View } from 'react-native'
+import { styles } from './styles/globalStyle'
 
 const AddPerson = ({person, setPerson, submitHandler}) => {
   return (
@@ -8,7 +9,10 @@ const AddPerson = ({person, setPerson, submitHandler}) => {
             style={styles.formInput} 
             placeholder='New name'  
             placeholderTextColor='#888'
-            onChangeText={value => setPerson(value)}
+            // onChangeText={value => setPerson(value)} 
+                // the above line is correct, followin line is the brief of this line, 
+                // because when you use onChangeText method, it gives the value of input to our function which is setPerson here
+            onChangeText={setPerson}
             value={person}
         />
         <Button color='#449977' title='Add Person' onPress={submitHandler} />
@@ -17,18 +21,3 @@ const AddPerson = ({person, setPerson, submitHandler}) => {
 }
 
 export default AddPerson
-
-const styles = StyleSheet.create({
-    formContainer: {
-        flexDirection: 'row',
-        columnGap: 16,
-    },
-    formInput: {
-        flex: 1,
-        flexGrow: 1,
-        padding: 8,
-        borderWidth: 1,
-        borderColor: '#CCCCCC',
-        borderRadius: 3,
-    },
-})
